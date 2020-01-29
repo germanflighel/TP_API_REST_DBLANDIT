@@ -5,7 +5,7 @@ const Student = new mongoose.Schema({
     surname: String,
     DNI: Number,
     cast: [String],
-    address: { type: String }
+    address: String
 });
 
 module.exports = mongoose.model('Student', Student);
