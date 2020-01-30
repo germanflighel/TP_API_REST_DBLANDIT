@@ -1,9 +1,9 @@
 const coursesRouter = require('express').Router();
 
-const { getCourse } = require('./coursesController');
+const { getCourses } = require('./coursesController');
 
 
-coursesRouter.get('/', getCourse);
+coursesRouter.get('/', getCourses);
 
 
 module.exports = coursesRouter;
