@@ -46,29 +46,44 @@ const createStudent = (req, res, next) => {
         })
     }
 
-    console.log(errors);
-
-    //TODO: Verificar que exista el curso y que el alumno no este anotado ya.
+    const course = req.course;
 
     const body = req.body;
 
-    const newStudent = new Student({
-        //TODO; Llenar con Student Model
-    });
+    const aStudent = {
+        student: {
+            name: body.name,
+            surname: body.surname,
+            DNI: body.DNI,
+            address: body.address,
+        },
+        grade: body.grade,
+    };
 
-    newStudent.save()
-        .then(created => {
-            res.status(201).json({
-                code: 0,
-                message: created
-            });
+    if (course.students.contains(aStudent)) {
+        return res.status(400).json({
+            code: 10,
+            message: "The Student is already in the Course"
+        });
+    }
+
+    course.students.push(aStudent);
+    course.save()
+        .then(modified => {
+        res.status(200).json({
+            code: 0,
+            message: modified
         })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                code: 20,
-                message: "Ocurrió un error con un módulo interno"
-            });
-        })
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            code: 20,
+            message: "Ocurrió un error con un módulo interno"
+        });
+    })
+
+
+
 };
 module.exports = { sendStudents, getStudents, getTopStudent, createStudent };

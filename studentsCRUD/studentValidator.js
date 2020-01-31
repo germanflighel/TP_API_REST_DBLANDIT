@@ -4,8 +4,9 @@ const { Course } = require('../models/Student');
 const studentValidator = [
     check('name').exists().withMessage("Must submit a Name"),
     check('surname').exists().withMessage("Must submit a Surname"),
-    check('DNI').isNumeric().withMessage("Year field must by an Integer representing hours."),
-    check('subject').exists().withMessage("A subject must be submitted."),
+    check('address').exists().withMessage("Must submit an Adress").isString(),
+    check('DNI').isNumeric().withMessage("DNI field must by an Integer."),
+    check('grade').isNumeric().withMessage("Grade must be a Number")
 ];
 
 module.exports = { studentValidator };

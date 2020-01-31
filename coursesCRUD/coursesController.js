@@ -25,10 +25,38 @@ const getCourses = (req, res, next) => {
         })
 };
 
+const getCourse = (req, res, next) => {
+
+    const course = req.params.course;
+
+    Course.findById(course)
+        .then(course => {
+            if (!course) {
+                res.status(400).json({
+                    code: 10,
+                    message: "Non existing course"
+                });
+            }
+            req.course = course;
+            next();
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                code: 20,
+                message: "Ocurrió un error con un módulo interno"
+            });
+        })
+};
+
 const createCourse = (req, res, next) => {
 
     const errors = validationResult(req);
 
+
+    const body = req.body;
+
+    console.log(body);
     if (!errors.isEmpty()) {
         return res.status(400).json({
             code: 10,
@@ -39,7 +67,6 @@ const createCourse = (req, res, next) => {
     console.log(errors);
 
 
-    const body = req.body;
 
     const newCourse = new Course({
         duration: body.duration,
@@ -92,4 +119,4 @@ const deleteCourse = (req, res, next) => {
 
 };
 
-module.exports = { getCourses, createCourse, deleteCourse };
+module.exports = { getCourses, createCourse, deleteCourse, getCourse };
