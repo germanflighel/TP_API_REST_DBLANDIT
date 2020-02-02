@@ -1,0 +1,222 @@
+swagger: "2.0"
+info:
+  description: "Sample course manager for DBLandIT.  Developed using Node JS & Expresss. No Auth required."
+  version: "1.0.0"
+  title: "DBLandIT Course Manager"
+  contact:
+    email: "flighelmang@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+basePath: "/v2"
+tags:
+- name: "Course"
+  description: "Manage your Courses"
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+- name: "Students"
+  description: "Manage students in your courses"
+
+schemes:
+- "http"
+paths:
+  /courses:
+    post:
+      tags:
+      - "Course"
+      summary: "Add a new course to database"
+      description: ""
+      operationId: "addCourse"
+      consumes:
+      - "application/json"
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Course object that will be added"
+        required: true
+        schema:
+          $ref: "#/definitions/Course"
+      responses:
+        400:
+          description: "Invalid input"
+    get:
+      tags:
+      - "Course"
+      summary: "Finds courses, filtering by year and/or duration"
+      operationId: "findCourses"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "duration"
+        in: "query"
+        description: "Duration to be filtered by"
+        required: false
+        type: "integer"
+      responses:
+        200:
+          description: "Courses"
+  /courses/{courseId}:
+    delete:
+      tags:
+      - "Course"
+      summary: "Delete a course by ID"
+      description: "For valid response try integer _id. Non-valid values will generate API errors"
+      operationId: "deleteOrder"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "courseId"
+        in: "path"
+        description: "ID of course to that needs to be deleted"
+        required: true
+        type: "string"
+        minimum: 1.0
+      responses:
+        200:
+          description: "Course was deleted"
+        400:
+          description: "Invalid ID supplied"
+  /courses/{courseId}/students:
+    get:
+      tags:
+      - "Students"
+      summary: "Get Students of a given course"
+      operationId: "findStudents"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "courseId"
+        in: "path"
+        description: "ID of course to that needs to be deleted"
+        required: true
+        type: "string"
+        minimum: 1.0
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              type: object
+              properties:
+                student: 
+                    $ref: "#/definitions/Student"
+                grade: 
+                  type: integer
+        400:
+          description: "Invalid id value"
+  /courses/{courseId}/student:
+    post:
+      tags:
+      - "Students"
+      summary: "Adds a student to the course"
+      description: ""
+      operationId: "addStudent"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "courseId"
+        in: "path"
+        description: "ID of course to add the Student"
+        required: true
+        type: "string"
+        minimum: 1.0
+        
+      - in: "body"
+        name: "body"
+        description: "Student object that will be added"
+        required: true
+        schema:
+          type: object
+          properties:
+            student: 
+              $ref: "#/definitions/Student"
+            grade: 
+              type: integer
+      responses:
+        400:
+          description: "Non-existing course or student already in course"
+  /courses/{courseId}/students/top:
+    get:
+      tags:
+      - "Students"
+      summary: "Gets the student with the top grade in a given course"
+      description: ""
+      operationId: "getTopStudent"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "courseId"
+        in: "path"
+        description: "ID of course to get the top Student"
+        required: true
+        type: "string"
+        minimum: 1.0
+      responses:
+        400:
+          description: "Non-existing course or student already in course"
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  Course:
+    type: "object"
+    properties:
+      year:
+        type: "integer"
+        format: "int64"
+      duration:
+        type: "integer"
+        format: "int64"
+        description: "Duration in hours"
+      subject:
+        type: "string"
+        description: "Subject given in course"
+      students:
+        type: "array"
+        items:
+            type: object
+            properties:
+              student:
+                  $ref: "#/definitions/Student"
+              grade: 
+                type: integer
+        description: "May not be provided"
+    xml:
+      name: "Order"
+  Student:
+    type: "object"
+    properties:
+      DNI:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+      surname:
+        type: "string"
+      address:
+        type: "string"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
+  
+  
