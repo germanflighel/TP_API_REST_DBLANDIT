@@ -60,7 +60,7 @@ const createStudent = (req, res, next) => {
         grade: body.grade,
     };
 
-    if (course.students.some((s) => s.DNI === aStudent.DNI)) {
+    if (course.students.some((s) => s.student.DNI === aStudent.student.DNI)) {
         return res.status(400).json({
             code: 10,
             message: "The Student is already in the Course"
